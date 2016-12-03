@@ -9,36 +9,62 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    
+    var alienDev : SKSpriteNode?
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!"
-        myLabel.fontSize = 45
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
+        self.backgroundColor = SKColor.whiteColor()
+        alienDev = SKSpriteNode(imageNamed: "dev")
+        alienDev!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
+        alienDev?.size = CGSizeMake(120,220)
         
-        self.addChild(myLabel)
+        self.addChild(alienDev!)
+        
+        let title = createTextNode("Welcome to Alien Dev",
+            nodeName: "titleNode",
+            position: CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame)-150))
+        self.addChild(title)
+        
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-       /* Called when a touch begins */
-        
-        for touch in touches {
-            let location = touch.locationInNode(self)
-            
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)
-        }
+    func createTextNode(text: String, nodeName: String, position: CGPoint) ->SKLabelNode{
+        let labelNode = SKLabelNode(fontNamed: "Futura")
+        labelNode.name = nodeName
+        labelNode.text = text
+        labelNode.fontSize = 30
+        labelNode.fontColor = SKColor.blackColor()
+        labelNode.position = position
+        return labelNode
     }
-   
+    
+    func createBug(){
+        let evilBug = SKSpriteNode(imageNamed: "bug")
+        evilBug.size = CGSizeMake(220, 120)
+        
+        let minX = (evilBug.size.width / 2)
+        let maxX = (self.frame.size.width - evilBug.size.width)
+        let rangeX : UInt32 = UInt32(maxX - minX)
+        
+        let finalX = Int(arc4random() % rangeX) + Int(minX)
+        
+        evilBug.position = CGPointMake(CGFloat(finalX),
+            self.frame.size.height + evilBug.size.height/2)
+        self.addChild(evilBug)
+        
+        let minDuration : Int = 3
+        let maxDuration : Int = 8
+        let rangeDuration : UInt32 = UInt32(maxDuration - minDuration)
+        
+        let finalDuration = Int(arc4random() % rangeDuration) + minDuration
+        
+        
+        let actionMove = SKAction.moveTo(CGPointMake(CGFloat(finalX), -evilBug.size.height/2), duration: NSTimeInterval(finalDuration))
+        let actionMoveDone = SKAction.removeFromParent()
+        
+        evilBug.runAction(SKAction.sequence([actionMove, actionMoveDone]))
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }

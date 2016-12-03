@@ -14,6 +14,12 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //TODO: Remove if not used
+    }
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.
             let skView = self.view as! SKView
@@ -28,8 +34,9 @@ class GameViewController: UIViewController {
             
             skView.presentScene(scene)
         }
+       
     }
-
+     //MARK: Standard Methods : Ignore
     override func shouldAutorotate() -> Bool {
         return true
     }
